@@ -1,2 +1,2 @@
 # ohtu-palautusrepositorio
-(https://github.com/brotholi/ohtuvarasto)
+https://github.com/brotholi/ohtuvarasto
