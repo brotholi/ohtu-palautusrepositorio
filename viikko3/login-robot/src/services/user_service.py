@@ -1,5 +1,5 @@
 from entities.user import User
-
+import re
 
 class UserInputError(Exception):
     pass
@@ -37,4 +37,19 @@ class UserService:
         if not username or not password:
             raise UserInputError("Username and password are required")
 
-        # toteuta loput tarkastukset tänne ja nosta virhe virhetilanteissa
+        user = self._user_repository.find_by_username(username)
+
+        if user:
+            raise UserInputError("Username already exists")
+
+        if len(username) < 3:
+            raise UserInputError("Username must be at least 3 characters long")
+
+        if re.match("^[a-z]+$", username) == None:
+            raise UserInputError("Username must consist of only a-z characters")
+        
+        if len(password) < 8:
+            raise UserInputError("Password must be at least 8 characters long")
+        
+        if bool(re.search(r'\d', password)) == False:
+            raise UserInputError("Password must contain at least one number")
