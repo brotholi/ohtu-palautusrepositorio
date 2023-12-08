@@ -1,35 +1,24 @@
 from matchers import *
 
 class QueryBuilder:
-    def __init__(self):
-        self.query = All()
-        self.matchers = []
-        self.or_query = False
+    def __init__(self, query = All()):
+        self.query = query
 
     def build(self):
-        if self.or_query:
-            self.query = Or(*self.matchers)
-        else:
-            self.query = All()
-            for matcher in self.matchers:
-                self.query = And(self.query, matcher)
-        
         return self.query
-
+    
     def playsIn(self, team):
-        self.matchers.append(PlaysIn(team))
-        return self
+        query = QueryBuilder(And(self.query, PlaysIn(team)))
+        return query
     
     def hasAtLeast(self, value, attr):
-        self.matchers.append(HasAtLeast(value, attr))
-        return self
+        query = QueryBuilder(And(self.query, HasAtLeast(value, attr)))
+        return query
     
     def hasFewerThan(self, value, attr):
-        self.matchers.append(HasFewerThan(value, attr))
-        return self
+        query = QueryBuilder(And(self.query, HasFewerThan(value, attr)))
+        return query
     
-    def oneOf(self, *matchers):
-        self.or_query = True
-        self.matchers = matchers
-        return self
-        
+    def oneOf(self, m1, m2):
+        query = QueryBuilder(Or(m1, m2))
+        return query
